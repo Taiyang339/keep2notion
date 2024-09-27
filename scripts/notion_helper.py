@@ -237,6 +237,12 @@ class NotionHelper:
     @retry(stop_max_attempt_number=3, wait_fixed=5000)
     def query_all(self, database_id):
         """获取database中所有的数据"""
+        filter = {
+            "property": "Id",
+            "rich_text": {
+                "is_not_empty": True
+            }
+        }
         results = []
         has_more = True
         start_cursor = None
@@ -245,6 +251,7 @@ class NotionHelper:
                 database_id=database_id,
                 start_cursor=start_cursor,
                 page_size=100,
+                filter=filter
             )
             start_cursor = response.get("next_cursor")
             has_more = response.get("has_more")
